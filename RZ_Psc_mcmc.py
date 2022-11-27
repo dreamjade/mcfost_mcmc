@@ -78,7 +78,7 @@ def lnlike(theta, original=False):
 
     #likelihood
     mt_jy_cs = CubicSpline(wav, mt_jy)
-    try:output = sum(norm.logsf((np.abs(Wise_flux-mt_jy_cs(Wise_wav))/w_err)))+sum(norm.logsf((np.abs(Alma_flux-mt_jy_cs(Alma_wav))/a_err)))
+    try:output = (-np.sum(((Wise_flux-mt_jy_cs(Wise_wav))/w_err)**2)-np.sum(((Alma_flux-mt_jy_cs(Alma_wav))/a_err)**2))/2 #chi^2/2
     except:return -np.inf
     shutil.rmtree(file_dir, ignore_errors=True)
     global best_sol_dir
