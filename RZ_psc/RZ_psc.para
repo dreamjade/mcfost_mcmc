@@ -1,1 +1,73 @@
+3.0                       mcfost version
 
+#Number of photon packages
+  10000                   nbr_photons_eq_th  : T computation
+  1000                    nbr_photons_lambda : SED computation
+  10000                   nbr_photons_image : images computation
+
+#Wavelength
+  150 0.1   3000          n_lambda, lambda_min, lambda_max [microns]
+  T T T                   compute temperature?, compute sed?, use default wavelength grid ?
+  IMLup.lambda           wavelength file (if previous parameter is F)
+  T T                     separation of different contributions?, stokes parameters?
+
+#Grid geometry and size
+  1                       1 = cylindrical, 2 = spherical, 3 = Voronoi tesselation (this is in beta, please ask Christophe)
+  100  70  1 20           n_rad (log distribution), nz (or n_theta), n_az, n_rad_in
+
+#Maps
+  512 512   8.0        grid (nx,ny), size [AU]
+  62.0  62.0   1 F    RT: imin, imax, n_incl, centered ?
+  0.0   0.0    1    RT: az_min, az_max, n_az
+  196.00                 distance (pc)
+  76.00                   disk PA
+  
+#Scattering method
+  0                      0=auto, 1=grain prop, 2=cell prop
+  1                      1=Mie, 2=hg (2 implies the loss of polarizarion)
+
+#Symmetries
+  F                      image symmetry
+  F                      central symmetry
+  T                      axial symmetry (important only if N_phi > 1)
+
+#Disk physics
+  0  0.50    1.00        dust_settling (0=no settling, 1=parametric, 2=Dubrulle, 3=Fromang), exp_strat, a_strat (for parametric settling)
+  F                       dust radial migration
+  F                      sublimate dust
+  F                       hydrostatic equilibrium
+  F  1e-05                 viscous heating, alpha_viscosity
+
+#Number of zones : 1 zone = 1 density structure + corresponding grain properties
+  1
+      
+#Density structure
+  4                       zone type : 1 = disk, 2 = tapered-edge disk, 3 = envelope, 4 = debris disk, 5 = wall
+  6.00e-08   0.1          dust mass,  gas-to-dust mass ratio
+  1.0    0.1    0.0             scale height, reference radius (AU), unused for envelope, vertical profile exponent (only for debris disk)
+  0.1     0.0    2.0    1.0     Rin, edge, Rout, Rc (AU) Rc is only used for tappered-edge & debris disks (Rout set to 8*Rc if Rout==0)
+  1.500                     flaring exponent, unused for envelope
+  -2.000 -1.000                surface density exponent (or -gamma for tappered-edge disk or volume density for envelope), usually < 0, -gamma_exp (or alpha_in & alpha_out for debris disk)
+        
+#Grain properties
+  1                       Number of species
+  Mie 1  1 0.00  1.00  0.9     Grain type (Mie or DHS), N_components, mixing rule (1 = EMT or 2 = coating),  porosity, mass fraction, Vmax (for DHS)
+  dlsi_opct.dat  1.0    Optical indices file, volume fraction
+  2                       Heating method : 1 = RE + LTE, 2 = RE + NLTE, 3 = NRE
+  0.010     1.0  3.500 100   amin, amax, aexp, nbr_grains
+      
+#Molecular RT settings
+  T  T  T 15.000000              lpop, laccurate_pop, LTE, profile width
+  0.2                    v_turb (delta)
+  1.0                      nmol
+  co@xpol.dat 6.0          molecular data filename, level_max
+  1.0 20.0                 vmax (km.s-1), n_speed
+  T 1e-06 abundance.fits.gz   cst molecule abundance ?, abundance, abundance file
+  T  3.0                   ray tracing ?,  number of lines in ray-tracing
+  1 2 3                  transition numbers
+      
+#Star properties
+  1 Number of stars
+  5350.0    0.9   1.0   0.0   0.0   0.0 T       Temp, radius (solar radius),M (solar mass),x,y,z (AU), is a blackbody?
+  Kurucz5350-4.5.fits.gz
+  0.0    0.0       fUV, slope_fUV 
