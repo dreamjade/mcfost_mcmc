@@ -132,7 +132,7 @@ for i in range(ndim):
     ax.set_ylabel(labels[i])
     ax.yaxis.set_label_coords(-0.1, 0.5)
 axes[-1].set_xlabel("step number")
-# Save the full figure...
+# Save the full figure
 fig.savefig('full_figure.png', bbox_inches='tight')
 
 
