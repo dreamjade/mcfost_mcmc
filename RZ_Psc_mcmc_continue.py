@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
 import mcfost
 from astropy.io import fits
 import numpy as np
@@ -25,10 +20,6 @@ import shutil
 from pathlib import Path
 Path("/tmp/mcmc").mkdir(parents=True, exist_ok=True)
 
-
-# In[2]:
-
-
 #obs_data
 Wise_wav=np.array([3.4, 4.6, 12, 22])
 Wise_flux=np.array([56.7436,47.7518,107.821,83.6299])
@@ -37,19 +28,12 @@ Alma_flux=np.array([41.6*10**-3])
 Alma_wav=1260
 a_err=np.array([8*10**-3])
 
-
-# In[3]:
-
-
 #record best
 best_sol_dir='best_sol.npy'
 best_sol = np.array([-3.28664347e+02,4.44964423e+01,1.82190546e+00,-1.45841990e+00,6.46660290e-02,3.50066859e+00,-1.04048118e+01,2.26889763e-01])
 np.save(best_sol_dir, best_sol)
 
-
-# In[4]:
-
-
+#lnprob
 def lnlike(theta, original=False):
     inc, flar_exp, surfd_exp, r_in, dr, log_dust_mass, scale_height = theta
     #read paramfile
@@ -106,19 +90,11 @@ def lnlike(theta, original=False):
         np.save(best_sol_dir, best_sol)
     return(output)
 
-
-# In[5]:
-
-
 def lnprior(theta):
     inc, flar_exp, surfd_exp, r_in, dr, log_dust_mass, scale_height = theta
     if 40.0 < inc < 90.0 and 1.2 < flar_exp < 2.0 and -2.5 < surfd_exp < 0.0 and 0.0 < r_in < 2.0 and 0.1 < dr < 5.0 and -10.5 < log_dust_mass < -7.5 and 0.01 < scale_height < 1.5:
         return 0
     return -np.inf
-
-
-# In[6]:
-
 
 def lnprob(theta, original=False):
     if original:
@@ -128,10 +104,6 @@ def lnprob(theta, original=False):
         return -np.inf
     return lp + lnlike(theta)
 
-
-# In[10]:
-
-
 #random position
 pos = np.random.rand(256, 7)*[50,0.8,2.5,2.0,4.9,3,1.49]+np.ones((256, 7))*[40,1.2,-2.5,0,0.1,-10.5,0.01]
 nwalkers, ndim = pos.shape
@@ -139,10 +111,6 @@ nwalkers, ndim = pos.shape
 filename = "Mcfost_emcee_py.h5"
 mcfost_backend = emcee.backends.HDFBackend(filename, name="Mcfost_emcee")
 #mcfost_backend.reset(nwalkers, ndim)
-
-
-# In[ ]:
-
 
 #run mcmc
 import os
@@ -152,10 +120,8 @@ with Pool() as pool:
     sampler = emcee.EnsembleSampler(nwalkers, ndim, lnprob, pool=pool, backend=mcfost_backend)
     sampler.run_mcmc(None, steps, progress=True,**{'skip_initial_state_check':True})
 
-
-# In[9]:
-
-
+    
+#plot mcmc chain
 fig, axes = plt.subplots(7, figsize=(10, 20), sharex=True)
 samples = sampler.get_chain()
 labels = ['inc','flar_exp','surf_den_exp','r_in','dr','log_dustm','scale_height']
@@ -166,13 +132,11 @@ for i in range(ndim):
     ax.set_ylabel(labels[i])
     ax.yaxis.set_label_coords(-0.1, 0.5)
 axes[-1].set_xlabel("step number")
-# Save the full figure...
+# Save the full figure
 fig.savefig('full_figure.png', bbox_inches='tight')
 
 
-# In[10]:
-
-
+#parameter distribution
 from IPython.display import display, Math
 flat_samples = sampler.get_chain(discard=50, thin=1, flat=True)
 for i in range(ndim):
@@ -182,10 +146,5 @@ for i in range(ndim):
     txt = txt.format(mcmc[1], q[0], q[1], labels[i])
     display(Math(txt))
 
-
-# In[11]:
-
-
 #print best
 print(best_sol)
-
