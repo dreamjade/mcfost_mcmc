@@ -2,20 +2,12 @@ import mcfost
 from astropy.io import fits
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm
-from matplotlib.ticker import LogFormatterExponent
-from numpy import unravel_index
-import astropy.units as unit
 import pysynphot
-import matplotlib.ticker as mticker
 import os
 from scipy.interpolate import CubicSpline
-from scipy.stats import norm
-import time
 import random
 import emcee
 from multiprocessing import Pool
-import signal
 import shutil
 from pathlib import Path
 Path("/tmp/mcmc").mkdir(parents=True, exist_ok=True)
